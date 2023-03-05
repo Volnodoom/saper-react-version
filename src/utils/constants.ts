@@ -8,6 +8,7 @@ export const SECOND_UNIT_COUNTER = 4;
 export const SECOND_DECADE_COUNTER = 5;
 export const SECOND_HUNDRED_COUNTER = 6;
 export const NUMBER_OF_ELEMENTS = 256;
+export const ZERO = 'Zero';
 
 export enum BasicNumbers {
   Zero = 0,
@@ -27,4 +28,16 @@ export enum TimerKind {
   Seconds = 'Seconds',
 };
 
-
+export enum FieldContent {
+  Bomb = 'bomb',
+  Zero = 0,
+  One = 1,
+  Two = 2,
+  Three = 3,
+  Four = 4,
+  Five = 5,
+  Six = 6,
+  Seven = 7,
+  Eight = 8,
+  Nine = 9,
+}

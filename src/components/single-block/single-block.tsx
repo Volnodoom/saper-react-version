@@ -1,24 +1,33 @@
+import { useState } from "react";
 import * as S from "./single-block.style";
 
 type SingleBlock = {
   isBomb: boolean;
 }
 
-const SingleBlock = () => {
+const SingleBlock = ({isBomb}: SingleBlock) => {
+  const [isBombExplode, setIsBombExplode] = useState(false);
 
   const handleLeftClick = () => {
+    if(isBomb) {
+      setIsBombExplode(true);
+    }
+  }
 
+  if(isBombExplode) {
+    return <S.BombExplosionField />
   }
 
   return(
     <div>
       <S.InactiveField />
+
       {/* <S.EmptyField />
       <S.FlagField />
       <S.QuestionField />
       <S.QuestionEmptyField />
       <S.BombField />
-      <S.BombExplosionField />
+
       <S.BombMissField />
       <S.FieldOne />
       <S.FieldTwo />
