@@ -60,7 +60,6 @@ const TimeNine = styled(Button)`
 
 const TimeWrapper = styled.div`
   display: flex;
-  margin: 20px;
 `
 
 export {

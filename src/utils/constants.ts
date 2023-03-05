@@ -7,8 +7,7 @@ export const MINUTE_DECADE_COUNTER = 2;
 export const SECOND_UNIT_COUNTER = 4;
 export const SECOND_DECADE_COUNTER = 5;
 export const SECOND_HUNDRED_COUNTER = 6;
-
-
+export const NUMBER_OF_ELEMENTS = 256;
 
 export enum BasicNumbers {
   Zero = 0,
@@ -28,8 +27,4 @@ export enum TimerKind {
   Seconds = 'Seconds',
 };
 
-export enum NumberPosition {
-  Unit = 'unit',
-  Decade = 'decade',
-  Hundred = 'hundred',
-};
+

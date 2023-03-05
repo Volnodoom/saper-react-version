@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { ThemeParametersType } from "types/style.type";
 
 const GlobalStyle = createGlobalStyle<ThemeParametersType>`
@@ -19,6 +19,10 @@ body {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   width: 100%;
   height: 100%;
 
@@ -116,7 +120,27 @@ button,
 }
 `;
 
+const AppWrapper = styled.div`
+  margin-top: 50px;
+  width: 280px;
+
+  border: 10px solid ${({theme}) => theme.color.greyCover};
+  outline: 3px outset ${({theme}) => theme.color.greyBorder};
+  background-color: ${({theme}) => theme.color.greyCover};
+
+  border-radius: 2px;
+
+`;
+
+const DecorationSplit = styled.div`
+  height: 15px;
+  background-color: ${({ theme }) => theme.color.greyCover };
+`;
+
+
 
 export {
   GlobalStyle,
+  AppWrapper,
+  DecorationSplit,
 };

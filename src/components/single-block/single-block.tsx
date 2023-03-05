@@ -1,10 +1,19 @@
 import * as S from "./single-block.style";
 
+type SingleBlock = {
+  isBomb: boolean;
+}
+
 const SingleBlock = () => {
+
+  const handleLeftClick = () => {
+
+  }
+
   return(
-    <div style={{display: 'flex'}}>
+    <div>
       <S.InactiveField />
-      <S.EmptyField />
+      {/* <S.EmptyField />
       <S.FlagField />
       <S.QuestionField />
       <S.QuestionEmptyField />
@@ -18,7 +27,7 @@ const SingleBlock = () => {
       <S.FieldFive />
       <S.FieldSix />
       <S.FieldSeven />
-      <S.FieldEight />
+      <S.FieldEight /> */}
     </div>
 
   );

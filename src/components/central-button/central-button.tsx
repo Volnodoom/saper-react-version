@@ -4,10 +4,10 @@ const CentralButton = () => {
   return(
     <div>
       <S.SmileFace />
-      <S.ResetFace />
+      {/* <S.ResetFace />
       <S.WonderFace />
       <S.CoolFace />
-      <S.FailFace />
+      <S.FailFace /> */}
     </div>
   );
 };
