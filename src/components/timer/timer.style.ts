@@ -58,6 +58,11 @@ const TimeNine = styled(Button)`
   background-position: 88.5% 0%;
 `;
 
+const TimeWrapper = styled.div`
+  display: flex;
+  margin: 20px;
+`
+
 export {
   TimeZero,
   TimeOne,
@@ -69,4 +74,5 @@ export {
   TimeSeven,
   TimeEight,
   TimeNine,
+  TimeWrapper,
 }
