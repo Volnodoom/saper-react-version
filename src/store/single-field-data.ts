@@ -3,7 +3,7 @@ import { create } from "zustand"
 export type ElementInfo = {
   id: string,
   coordinates: number[],
-  showOffContent: string | null,
+  hasFlag: boolean,
   isOpen: boolean,
   hiddenContent: null | number,
 }
@@ -13,11 +13,12 @@ export type CurrentElementType = {
   activeFieldElement: number[],
   addField: (id: string, content: ElementInfo) => void,
   updateFields: ( content: ElementInfo[]) => void,
-  updateShowOffContent: (id: string, content: string | null) => void,
-  updateIsOpenContent: (id: string, content: boolean) => void,
-  setActiveElement: (coordinates: number[]) => void,
   clearEntities: () => void,
+  setActiveElement: (coordinates: number[]) => void,
   clearActiveElement: () => void,
+  openField: (id: string) => void,
+  addFieldFlag: (id: string) => void,
+  removeFieldFlag: (id: string) => void,
 }
 
 export const usePlaygroundStore = create<CurrentElementType>((set) => ({
@@ -53,7 +54,7 @@ export const usePlaygroundStore = create<CurrentElementType>((set) => ({
       ]
     }
   )),
-  updateShowOffContent: (id, content) => set((state) => {
+  addFieldFlag: (id) => set((state) => {
     const indexofUpdateElement = state.entities.findIndex((line) => line.id === id);
 
     if (indexofUpdateElement === -1) {
@@ -65,7 +66,7 @@ export const usePlaygroundStore = create<CurrentElementType>((set) => ({
         ...state.entities.slice(0, indexofUpdateElement),
         {
           ...state.entities[indexofUpdateElement],
-          showOffContent: content,
+          hasFlag: true,
 
         },
         ...state.entities.slice(indexofUpdateElement + 1),
@@ -73,7 +74,7 @@ export const usePlaygroundStore = create<CurrentElementType>((set) => ({
     })
   }
   ),
-  updateIsOpenContent: (id, content) => set((state) => {
+  removeFieldFlag: (id) => set((state) => {
     const indexofUpdateElement = state.entities.findIndex((line) => line.id === id);
 
     if (indexofUpdateElement === -1) {
@@ -85,7 +86,27 @@ export const usePlaygroundStore = create<CurrentElementType>((set) => ({
         ...state.entities.slice(0, indexofUpdateElement),
         {
           ...state.entities[indexofUpdateElement],
-          isOpen: content,
+          hasFlag: false,
+
+        },
+        ...state.entities.slice(indexofUpdateElement + 1),
+      ]
+    })
+  }
+  ),
+  openField: (id) => set((state) => {
+    const indexofUpdateElement = state.entities.findIndex((line) => line.id === id);
+
+    if (indexofUpdateElement === -1) {
+      throw new Error('Can\'t update unexisting point');
+    }
+
+    return ({
+      entities: [
+        ...state.entities.slice(0, indexofUpdateElement),
+        {
+          ...state.entities[indexofUpdateElement],
+          isOpen: true,
 
         },
         ...state.entities.slice(indexofUpdateElement + 1),

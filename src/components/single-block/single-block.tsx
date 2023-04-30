@@ -1,36 +1,45 @@
-import { getGameStatus, setActiveFieldElement, setGameStatus, updateIsOpenFieldSelector } from "store/selector";
+import { getGameStatus, showHiddenField, setActiveFieldElement, setGameStatus, addFlagToField, removeFlagFromField, addFlagGlobal, removeFlagGlobal } from "store/selector";
 import { ElementInfo } from "store/single-field-data";
 import { useGameData, usePlaygroundStore } from "store";
 import { BasicNumbers, BOMB, GameStatus, HiddenFieldInteraction, RIGHT_CLICK_BUTTON } from "utils/constants";
 import * as S from "./single-block.style";
 import { MouseEvent, useEffect, useState } from "react";
 
-type SingleBlock = {
+type SingleBlockType = {
   blockInfo: ElementInfo,
 }
 
-const SingleBlock = ({blockInfo}: SingleBlock) => {
+const SingleBlock = ({blockInfo}: SingleBlockType) => {
   const {
     id,
     coordinates,
-    showOffContent,
+    hasFlag,
     hiddenContent,
     isOpen,
   } = blockInfo;
 
-  const updateIsOpenField = usePlaygroundStore(updateIsOpenFieldSelector);
+  const revealField = usePlaygroundStore(showHiddenField);
   const setActiveElement = usePlaygroundStore(setActiveFieldElement);
   const setStatus = useGameData(setGameStatus);
   const currentStatus = useGameData(getGameStatus);
+  const addFieldFlag = usePlaygroundStore(addFlagToField);
+  const removeFieldFlag = usePlaygroundStore(removeFlagFromField);
+  const addGlobalFlag = useGameData(addFlagGlobal);
+  const removeGlobalFlag = useGameData(removeFlagGlobal);
 
   const [counterClick, setCounterClick] = useState(0);
   const [hiddenInteractionValue, setHiddenInteractionValue] = useState(HiddenFieldInteraction.Empty)
 
+  // right click logic
   useEffect(() => {
     if(counterClick === BasicNumbers.One) {
+      addFieldFlag(id);
+      addGlobalFlag();
       setHiddenInteractionValue(HiddenFieldInteraction.Flag);
     }
     if(counterClick === BasicNumbers.Two) {
+      removeFieldFlag(id);
+      removeGlobalFlag();
       setHiddenInteractionValue(HiddenFieldInteraction.Question);
     }
     if(counterClick === BasicNumbers.Zero) {
@@ -40,7 +49,7 @@ const SingleBlock = ({blockInfo}: SingleBlock) => {
       setHiddenInteractionValue(HiddenFieldInteraction.Empty);
       setCounterClick(0);
     }
-  }, [counterClick])
+  }, [addFieldFlag, addGlobalFlag, counterClick, id, removeFieldFlag, removeGlobalFlag])
 
   useEffect(() => {
     if(currentStatus === GameStatus.Reset) {
@@ -52,7 +61,14 @@ const SingleBlock = ({blockInfo}: SingleBlock) => {
 
   const calculateHiddenInteraction = () => {
     if(currentStatus === GameStatus.Fail && hiddenContent === BOMB) {
-      return HiddenFieldInteraction.BombReveal
+      if(hasFlag) {
+        return HiddenFieldInteraction.BombDeactivation;
+      }
+      return HiddenFieldInteraction.BombReveal;
+    }
+
+    if(currentStatus === GameStatus.Win && hiddenContent === BOMB) {
+      return HiddenFieldInteraction.BombDeactivation;
     }
 
 
@@ -60,6 +76,9 @@ const SingleBlock = ({blockInfo}: SingleBlock) => {
   }
 
   const handleRightClick = () => {
+    if(currentStatus === GameStatus.Fail || currentStatus === GameStatus.Win) {
+      return
+    }
     setCounterClick(prev => prev + 1);
   }
 
@@ -69,7 +88,11 @@ const SingleBlock = ({blockInfo}: SingleBlock) => {
       return;
     }
 
-    if(currentStatus === GameStatus.Fail) {
+    if(currentStatus === GameStatus.Fail || currentStatus === GameStatus.Win) {
+      return
+    }
+
+    if(hasFlag) {
       return
     }
 
@@ -79,16 +102,16 @@ const SingleBlock = ({blockInfo}: SingleBlock) => {
       setStatus(GameStatus.Idle)
     }
 
-    updateIsOpenField(id, true);
+    revealField(id);
     setActiveElement(coordinates);
   }
 
   const handleDownClick = (evt: MouseEvent) => {
-    if(evt.button === RIGHT_CLICK_BUTTON) {
+    if(evt.button === RIGHT_CLICK_BUTTON || hasFlag) {
       return;
     }
 
-    if(currentStatus === GameStatus.Fail) {
+    if(currentStatus === GameStatus.Fail || currentStatus === GameStatus.Win) {
       return
     }
 

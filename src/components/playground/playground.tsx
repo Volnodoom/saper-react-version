@@ -1,18 +1,20 @@
-import SingleBlock from "components/single-block/single-block";
 import { useEffect } from "react";
-import { clearActiveField, getActiveField, getEntities, updateFieldsSelector } from "store/selector";
+import { clearActiveField, getActiveField, getEntities, setGameStatus, updateFieldsSelector } from "store/selector";
 import { ElementInfo } from "store/single-field-data";
-import { usePlaygroundStore } from "store";
-import { BOMB, LINE_LENGTH } from "utils/constants";
+import { useGameData, usePlaygroundStore } from "store";
+import { BOMB, BOMBS_NUMBER, GameStatus, LINE_LENGTH } from "utils/constants";
 import * as S from "./playground.style";
 import { getHiddenValue, revealEmptyFieldsInArea } from "utils/utils";
+import SingleBlock from "components/single-block/single-block";
 
 const Playground = () => {
   const getAllFields = usePlaygroundStore(getEntities);
   const activeFieldCoordinates = usePlaygroundStore(getActiveField);
   const updateFields = usePlaygroundStore(updateFieldsSelector);
   const clearActiveElement = usePlaygroundStore(clearActiveField);
+  const setStatus = useGameData(setGameStatus);
 
+  //logic for revealing fields
   useEffect(() => {
     const surroundedFields: [number, number] [] = [];
     const allFieldsCopy = getAllFields.slice();
@@ -48,6 +50,23 @@ const Playground = () => {
       clearActiveElement();
     }
   },[activeFieldCoordinates, clearActiveElement, getAllFields, updateFields])
+
+  //logic for win condition
+  useEffect(() => {
+    const hiddenFieldsNumber = getAllFields.filter((fieldInfo) => fieldInfo.isOpen === false);
+    const isHiddenFieldsLimited = hiddenFieldsNumber.length === BOMBS_NUMBER;
+
+    const flagFields = hiddenFieldsNumber.filter((fieldInfo) => fieldInfo.hasFlag === true);
+    const isFlagsLimited = flagFields.length === BOMBS_NUMBER;
+
+    const isFlagsOnBombs = flagFields.filter((fieldInfo) => fieldInfo.hiddenContent === BOMB)
+      .length === BOMBS_NUMBER
+
+    if(isHiddenFieldsLimited && isFlagsLimited && isFlagsOnBombs) {
+      setStatus(GameStatus.Win);
+    }
+
+  }, [getAllFields, setStatus]);
 
   return(
     <S.PlaygroundWrapper>

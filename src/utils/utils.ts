@@ -1,5 +1,5 @@
 import { ElementInfo } from "store/single-field-data";
-import { BOMB, LINE_LENGTH } from "./constants";
+import { BOMB, BOMBS_NUMBER, LINE_LENGTH } from "./constants";
 
 type RevealFieldsType = (
   coordinatesStore: [number, number][],
@@ -10,7 +10,7 @@ type RevealFieldsType = (
 type GeneralFieldType = {
   id: string,
   coordinates: [number, number],
-  showOffContent: string | null,
+  hasFlag: boolean,
   isOpen: boolean,
   hiddenContent: number,
 }
@@ -84,7 +84,7 @@ export const generateInitialField = () => {
         coordinates,
         isOpen: false,
         hiddenContent: 0,
-        showOffContent: null,
+        hasFlag: false,
       })
     }
 
@@ -93,11 +93,11 @@ export const generateInitialField = () => {
       coordinates: [xLine++, yLine],
       isOpen: false,
       hiddenContent: 0,
-      showOffContent: null,
+      hasFlag: false,
     })
   })
 
-  for(let i = 0; i < LINE_LENGTH;) {
+  for(let i = 0; i < BOMBS_NUMBER;) {
     const coordinateX = Math.floor(Math.random() * LINE_LENGTH);
     const coordinateY = Math.floor(Math.random() * LINE_LENGTH);
 

@@ -6,11 +6,14 @@ export const getActiveField = (state: CurrentElementType) => state.activeFieldEl
 export const clearEntities = (state: CurrentElementType) => state.clearEntities;
 export const addFieldSelector = (state: CurrentElementType) => state.addField;
 export const updateFieldsSelector = (state: CurrentElementType) => state.updateFields;
-export const updateShowOffFieldSelector = (state: CurrentElementType) => state.updateShowOffContent;
-export const updateIsOpenFieldSelector = (state: CurrentElementType) => state.updateIsOpenContent;
+export const addFlagToField = (state: CurrentElementType) => state.addFieldFlag;
+export const removeFlagFromField = (state: CurrentElementType) => state.removeFieldFlag;
 export const setActiveFieldElement = (state: CurrentElementType) => state.setActiveElement;
 export const clearActiveField = (state: CurrentElementType) => state.clearActiveElement;
+export const showHiddenField = (state: CurrentElementType) => state.openField;
 
 //Status selectors
 export const getGameStatus = (state: GameDataType) => state.gameStatus;
 export const setGameStatus = (state: GameDataType) => state.setGameStatus;
+export const addFlagGlobal = (state: GameDataType) => state.addFlag;
+export const removeFlagGlobal = (state: GameDataType) => state.removeFlag;

@@ -15,10 +15,6 @@ const CentralButton = () => {
     setButtonStatus(GameStatus.Reset);
   }
 
-  const handleLeaveButton = () => {
-    setButtonStatus(GameStatus.Idle);
-  }
-
   const handleUpPress = () => {
     clearFields();
     clearActiveElement();
@@ -29,7 +25,6 @@ const CentralButton = () => {
   return <S.CentralButton
     faceType={currentButtonStatus}
     onMouseDown={handleDownPress}
-    onMouseLeave={handleLeaveButton}
     onMouseUp={handleUpPress}
   />;
 };
