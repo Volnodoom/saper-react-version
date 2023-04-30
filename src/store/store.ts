@@ -1,27 +1,55 @@
 import { create } from "zustand"
 
-type ElementInfo = {
+export type ElementInfo = {
   id: string,
   coordinates: number[],
   showOffContent: string | null,
-  isBomb: boolean,
   isOpen: boolean,
+  hiddenContent: null | number,
 }
 
 export type CurrentElementType = {
   entities: ElementInfo[],
+  activeFieldElement: number[],
   addField: (id: string, content: ElementInfo) => void,
+  updateFields: ( content: ElementInfo[]) => void,
   updateShowOffContent: (id: string, content: string | null) => void,
   updateIsOpenContent: (id: string, content: boolean) => void,
+  setActiveElement: (coordinates: number[]) => void,
+  clearEntities: () => void,
+  clearActiveElement: () => void,
 }
 
 export const usePlaygroundStore = create<CurrentElementType>((set) => ({
   entities: [],
+  activeFieldElement: [],
+  setActiveElement: (coordinates) => set((state) => (
+    {
+      activeFieldElement: coordinates,
+    }
+  )),
+  clearActiveElement: () => set((state) => (
+    {
+      activeFieldElement: [],
+    }
+  )),
+  clearEntities: () => set((state) => (
+    {
+      entities: [],
+    }
+  )),
   addField: (id: string, content: ElementInfo) => set((state) => (
     {
       entities: [
         ...state.entities,
         content,
+      ]
+    }
+  )),
+  updateFields: (content: ElementInfo[]) => set((state) => (
+    {
+      entities: [
+        ...content,
       ]
     }
   )),
