@@ -1,24 +1,36 @@
 import { useEffect, useRef, useState } from "react";
-import { BasicNumbers, GENERAL_TIME_MS, MINUTE_DECADE_COUNTER, MINUTE_UNIT_COUNTER, ONE_MINUTE_MS, ONE_SEC_MS, SECOND_DECADE_COUNTER, SECOND_HUNDRED_COUNTER, SECOND_UNIT_COUNTER, SIXTY, TimerKind } from "utils/constants";
-import TimerNumbers from "./timer-numbers";
-import * as S from "./timer.style";
+import { BasicNumbers, GENERAL_TIME_MS, GameStatus, MINUTE_DECADE_COUNTER, MINUTE_UNIT_COUNTER, ONE_MINUTE_MS, ONE_SEC_MS, SECOND_DECADE_COUNTER, SECOND_HUNDRED_COUNTER, SECOND_UNIT_COUNTER, SIXTY, TimerKind } from "utils/constants";
+import * as S from "../numbers.style";
+import NumberDigits from "../numbers";
+import { useGameData } from "store";
+import { getGameStatus } from "store/selector";
 
 const Timer = (prop: {timerType: TimerKind}) => {
   const timerType = prop.timerType;
 
   const fixedMinuteTime = useRef<Date | null>(null);
   const fixedSecondTime = useRef<Date | null>(null);
+  const intervalId = useRef<NodeJS.Timer | null>(null);
 
   const [unit, setUnit] = useState<number>(BasicNumbers.Zero);
   const [decade, setDecade] = useState<number>(BasicNumbers.Zero);
   const [hundred, setHundred] = useState<number>(BasicNumbers.Zero);
+
+  const isReset = useGameData(getGameStatus) === GameStatus.Reset;
+
+  //reset logic
+  useEffect(() => {
+    if(isReset) {
+      clearInterval(intervalId.current as NodeJS.Timer);
+    }
+  }, [isReset])
 
   useEffect(() => {
     const deadlineDate = new Date();
     fixedSecondTime.current = new Date();
     deadlineDate.setTime(deadlineDate.getTime() + GENERAL_TIME_MS);
     fixedMinuteTime.current = deadlineDate;
-  }, [])
+  }, [isReset])
 
   const calculateSecondTime = () => {
     if(!fixedSecondTime.current) {
@@ -85,23 +97,19 @@ const Timer = (prop: {timerType: TimerKind}) => {
 
   useEffect(() => {
     if(timerType === TimerKind.Seconds) {
-      const secondInterval = setInterval(() => calculateSecondTime(), ONE_SEC_MS);
-
-      return () => clearInterval(secondInterval);
+      intervalId.current = setInterval(() => calculateSecondTime(), ONE_SEC_MS);
     } else {
-      const minuteInterval = setInterval(() => calculateMinuteTime(), ONE_SEC_MS);
+      intervalId.current = setInterval(() => calculateMinuteTime(), ONE_SEC_MS);
 
-      return () => clearInterval(minuteInterval);
     }
-
   }, [timerType])
 
   return(
-    <S.TimeWrapper>
-      <TimerNumbers timeValue={hundred}/>
-      <TimerNumbers timeValue={decade}/>
-      <TimerNumbers timeValue={unit}/>
-    </S.TimeWrapper>
+    <S.NumbersWrapper>
+      <NumberDigits value={hundred}/>
+      <NumberDigits value={decade}/>
+      <NumberDigits value={unit}/>
+    </S.NumbersWrapper>
   );
 };
 

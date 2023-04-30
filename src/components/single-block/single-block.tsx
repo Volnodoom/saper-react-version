@@ -34,12 +34,12 @@ const SingleBlock = ({blockInfo}: SingleBlockType) => {
   useEffect(() => {
     if(counterClick === BasicNumbers.One) {
       addFieldFlag(id);
-      addGlobalFlag();
+      removeGlobalFlag();
       setHiddenInteractionValue(HiddenFieldInteraction.Flag);
     }
     if(counterClick === BasicNumbers.Two) {
       removeFieldFlag(id);
-      removeGlobalFlag();
+      addGlobalFlag();
       setHiddenInteractionValue(HiddenFieldInteraction.Question);
     }
     if(counterClick === BasicNumbers.Zero) {

@@ -17,3 +17,5 @@ export const getGameStatus = (state: GameDataType) => state.gameStatus;
 export const setGameStatus = (state: GameDataType) => state.setGameStatus;
 export const addFlagGlobal = (state: GameDataType) => state.addFlag;
 export const removeFlagGlobal = (state: GameDataType) => state.removeFlag;
+export const getFlagGlobal = (state: GameDataType) => state.flagsNumber;
+export const setFlagGlobalNumber = (state: GameDataType) => state.setFlagNumber;

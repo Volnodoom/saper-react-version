@@ -7,6 +7,7 @@ export type GameDataType = {
   setGameStatus: (status: GameStatus) => void,
   addFlag: () => void,
   removeFlag: () => void,
+  setFlagNumber: (value: number) => void,
 }
 
 export const useGameData = create<GameDataType>((set) => ({
@@ -19,12 +20,17 @@ export const useGameData = create<GameDataType>((set) => ({
   )),
   addFlag: () => set((state) => (
     {
-      flagsNumber: state.flagsNumber++,
+      flagsNumber: ++state.flagsNumber,
     }
   )),
   removeFlag: () => set((state) => (
     {
-      flagsNumber: state.flagsNumber--,
+      flagsNumber: --state.flagsNumber,
+    }
+  )),
+  setFlagNumber: (value) => set((state) => (
+    {
+      flagsNumber: value,
     }
   )),
 }))
