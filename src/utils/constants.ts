@@ -9,6 +9,8 @@ export const SECOND_DECADE_COUNTER = 5;
 export const SECOND_HUNDRED_COUNTER = 6;
 export const LINE_LENGTH = 16;
 export const BOMB = -1;
+export const LEFT_CLICK_BUTTON = 0;
+export const RIGHT_CLICK_BUTTON = 2;
 
 export const ZERO = 'Zero';
 
@@ -29,4 +31,21 @@ export enum TimerKind {
   Minutes = 'minutes',
   Seconds = 'Seconds',
 };
+
+export enum GameStatus {
+  Idle = 'idl',
+  Unsure = 'unsure',
+  Reset = 'reset',
+  Win = 'win',
+  Fail = 'fail',
+}
+
+export enum HiddenFieldInteraction {
+  Empty = 'empty',
+  Flag = 'flag',
+  Question = 'question',
+  QuestionEmpty = 'questionEmpty',
+  BombReveal = 'bombReveal',
+  BombDeactivation = 'bombDeactivation',
+}
 

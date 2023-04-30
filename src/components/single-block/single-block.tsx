@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { setActiveFieldElement, updateIsOpenFieldSelector } from "store/selector";
-import { ElementInfo, usePlaygroundStore } from "store/store";
-import { BasicNumbers, BOMB } from "utils/constants";
+import { getGameStatus, setActiveFieldElement, setGameStatus, updateIsOpenFieldSelector } from "store/selector";
+import { ElementInfo } from "store/single-field-data";
+import { useGameData, usePlaygroundStore } from "store";
+import { BasicNumbers, BOMB, GameStatus, HiddenFieldInteraction, RIGHT_CLICK_BUTTON } from "utils/constants";
 import * as S from "./single-block.style";
+import { MouseEvent, useEffect, useState } from "react";
 
 type SingleBlock = {
   blockInfo: ElementInfo,
@@ -19,24 +20,83 @@ const SingleBlock = ({blockInfo}: SingleBlock) => {
 
   const updateIsOpenField = usePlaygroundStore(updateIsOpenFieldSelector);
   const setActiveElement = usePlaygroundStore(setActiveFieldElement);
+  const setStatus = useGameData(setGameStatus);
+  const currentStatus = useGameData(getGameStatus);
+
+  const [counterClick, setCounterClick] = useState(0);
+  const [hiddenInteractionValue, setHiddenInteractionValue] = useState(HiddenFieldInteraction.Empty)
+
+  useEffect(() => {
+    if(counterClick === BasicNumbers.One) {
+      setHiddenInteractionValue(HiddenFieldInteraction.Flag);
+    }
+    if(counterClick === BasicNumbers.Two) {
+      setHiddenInteractionValue(HiddenFieldInteraction.Question);
+    }
+    if(counterClick === BasicNumbers.Zero) {
+      setHiddenInteractionValue(HiddenFieldInteraction.Empty);
+    }
+    if(counterClick > BasicNumbers.Two) {
+      setHiddenInteractionValue(HiddenFieldInteraction.Empty);
+      setCounterClick(0);
+    }
+  }, [counterClick])
+
+  useEffect(() => {
+    if(currentStatus === GameStatus.Reset) {
+      setCounterClick(0);
+      setHiddenInteractionValue(HiddenFieldInteraction.Empty);
+    }
+  }, [currentStatus])
 
 
-  // const [isBombExplode, setIsBombExplode] = useState(false);
+  const calculateHiddenInteraction = () => {
+    if(currentStatus === GameStatus.Fail && hiddenContent === BOMB) {
+      return HiddenFieldInteraction.BombReveal
+    }
 
-  const handleLeftClick = () => {
-    // console.log(`click-${id}`)
+
+    return hiddenInteractionValue
+  }
+
+  const handleRightClick = () => {
+    setCounterClick(prev => prev + 1);
+  }
+
+  const handleOpenClick = (evt: MouseEvent) => {
+    if(evt.button === RIGHT_CLICK_BUTTON) {
+      handleRightClick();
+      return;
+    }
+
+    if(currentStatus === GameStatus.Fail) {
+      return
+    }
+
+    if(hiddenContent === BOMB) {
+      setStatus(GameStatus.Fail);
+    } else {
+      setStatus(GameStatus.Idle)
+    }
+
     updateIsOpenField(id, true);
     setActiveElement(coordinates);
   }
 
-  // if(isBombExplode) {
-  //   return <S.BombExplosionField />
-  // }
+  const handleDownClick = (evt: MouseEvent) => {
+    if(evt.button === RIGHT_CLICK_BUTTON) {
+      return;
+    }
 
+    if(currentStatus === GameStatus.Fail) {
+      return
+    }
+
+    setStatus(GameStatus.Unsure)
+  }
 
   if(isOpen) {
     if(hiddenContent === BOMB) {
-      // window.alert('gameOver');
       return <S.BombExplosionField />
     } else if(hiddenContent === null || hiddenContent === BasicNumbers.Zero) {
       return <S.EmptyField />;
@@ -61,18 +121,10 @@ const SingleBlock = ({blockInfo}: SingleBlock) => {
 
   return(
     <S.InactiveField
-      onClick={handleLeftClick}
+      hiddenInteraction={calculateHiddenInteraction()}
+      onMouseDown={handleDownClick}
+      onMouseUp={handleOpenClick}
     />);
 };
-
-      // eslint-disable-next-line no-lone-blocks
-      {/*
-      <S.FlagField />
-      <S.QuestionField />
-      <S.QuestionEmptyField />
-
-      <S.BombMissField />
-
-       */}
 
 export default SingleBlock;

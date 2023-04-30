@@ -1,6 +1,11 @@
 import styled, { css } from "styled-components";
 import saperSprite from "assets/img/saper-sprite.png"
 import Button from "components/styled/button/button";
+import { HiddenFieldInteraction } from "utils/constants";
+
+type InactiveFieldType = {
+  hiddenInteraction? : HiddenFieldInteraction
+};
 
 const buttonBase = css`
   width: 16px;
@@ -8,9 +13,36 @@ const buttonBase = css`
   background: url(${saperSprite}) no-repeat;
 `;
 
-const InactiveField = styled(Button)`
+const flag = css`
+  background-position: 28% 75%;
+`;
+
+const question = css`
+  background-position: 42% 75%;
+`;
+
+const questionEmpty = css`
+  background-position: 55.5% 75%;
+`;
+
+const bombReveal = css`
+  background-position: 69.5% 75%;
+`;
+
+const bombDeactivation = css`
+  background-position: 97% 75%;
+`;
+
+const InactiveField = styled(Button)<InactiveFieldType>`
   ${buttonBase};
   background-position: 0 75%;
+
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.Flag && flag}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.Question && question}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.QuestionEmpty && questionEmpty}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.BombReveal && bombReveal}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.BombDeactivation && bombDeactivation}
+
 `;
 
 const EmptyField = styled(Button)`
@@ -18,34 +50,9 @@ const EmptyField = styled(Button)`
   background-position: 14% 75%;
 `;
 
-const FlagField = styled(Button)`
-  ${buttonBase};
-  background-position: 28% 75%;
-`;
-
-const QuestionField = styled(Button)`
-  ${buttonBase};
-  background-position: 42% 75%;
-`;
-
-const QuestionEmptyField = styled(Button)`
-  ${buttonBase};
-  background-position: 55.5% 75%;
-`;
-
-const BombField = styled(Button)`
-  ${buttonBase};
-  background-position: 69.5% 75%;
-`;
-
 const BombExplosionField = styled(Button)`
   ${buttonBase};
   background-position: 83.5% 75%;
-`;
-
-const BombMissField = styled(Button)`
-  ${buttonBase};
-  background-position: 97% 75%;
 `;
 
 const FieldOne = styled(Button)`
@@ -91,12 +98,7 @@ const FieldEight = styled(Button)`
 export {
   InactiveField,
   EmptyField,
-  FlagField,
-  QuestionField,
-  QuestionEmptyField,
-  BombField,
   BombExplosionField,
-  BombMissField,
   FieldOne,
   FieldTwo,
   FieldThree,

@@ -1,14 +1,14 @@
 import SingleBlock from "components/single-block/single-block";
 import { useEffect } from "react";
 import { clearActiveField, getActiveField, getEntities, updateFieldsSelector } from "store/selector";
-import { ElementInfo, usePlaygroundStore } from "store/store";
+import { ElementInfo } from "store/single-field-data";
+import { usePlaygroundStore } from "store";
 import { BOMB, LINE_LENGTH } from "utils/constants";
 import * as S from "./playground.style";
 import { getHiddenValue, revealEmptyFieldsInArea } from "utils/utils";
 
 const Playground = () => {
   const getAllFields = usePlaygroundStore(getEntities);
-
   const activeFieldCoordinates = usePlaygroundStore(getActiveField);
   const updateFields = usePlaygroundStore(updateFieldsSelector);
   const clearActiveElement = usePlaygroundStore(clearActiveField);
