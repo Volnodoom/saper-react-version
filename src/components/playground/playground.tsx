@@ -1,129 +1,82 @@
-import SingleBlock from "components/single-block/single-block";
 import { useEffect } from "react";
-import { addFieldSelector, updateIsOpenFieldSelector, updateShowOffFieldSelector } from "store/selector";
-import { usePlaygroundStore } from "store/store";
-import { BasicNumbers, NUMBER_OF_ELEMENTS, ZERO } from "utils/constants";
+import { clearActiveField, getActiveField, getEntities, setGameStatus, updateFieldsSelector } from "store/selector";
+import { ElementInfo } from "store/single-field-data";
+import { useGameData, usePlaygroundStore } from "store";
+import { BOMB, BOMBS_NUMBER, GameStatus, LINE_LENGTH } from "utils/constants";
 import * as S from "./playground.style";
-
-const getKeyNameForFieldContent = (checkNumber: number): string  => {
-  const reversObject: {[x: string]: string} = {}
-  for(const [key, value] of Object.entries(BasicNumbers)) {
-    Object.assign(reversObject, {[value]: key})
-  }
-
-  return reversObject[String(checkNumber)]
-};
-
-type CurrentElementType = {
-  coordinates: number[],
-  showOffContent: string | null,
-}
+import { getHiddenValue, revealEmptyFieldsInArea } from "utils/utils";
+import SingleBlock from "components/single-block/single-block";
 
 const Playground = () => {
-  const LINE_LENGTH = 5;
-  const addNewField = usePlaygroundStore(addFieldSelector);
-  const updateShowOffField = usePlaygroundStore(updateShowOffFieldSelector);
-  const updateIsOpenField = usePlaygroundStore(updateIsOpenFieldSelector);
+  const getAllFields = usePlaygroundStore(getEntities);
+  const activeFieldCoordinates = usePlaygroundStore(getActiveField);
+  const updateFields = usePlaygroundStore(updateFieldsSelector);
+  const clearActiveElement = usePlaygroundStore(clearActiveField);
+  const setStatus = useGameData(setGameStatus);
 
-  let xLine = 1;
-  let yLine = 1;
-
-  const squareFragments = Array.from({length: NUMBER_OF_ELEMENTS}, (item, index) => {
-    if(index === 7) {
-      xLine++;
-      return {
-        id: '3@2',
-        coordinates: [3, 2],
-        isBomb: true,
-        isOpen: false,
-        showOffContent: null,
-      }
-    }
-
-    if(index === 0) {
-      xLine++;
-      return ({
-        id: '1@1',
-        coordinates: [1, 1],
-        isBomb: false,
-        isOpen: false,
-        showOffContent: null,
-      })
-    }
-
-    if(++index % LINE_LENGTH === 0) {
-      const coordinates = [xLine++, yLine];
-      xLine = 1;
-      yLine++;
-
-      return ({
-        id: `${coordinates[0]}@${coordinates[1]}`,
-        coordinates,
-        isBomb: false,
-        isOpen: false,
-        showOffContent: null,
-      })
-    }
-
-    return ({
-      id: `${xLine++}@${yLine}`,
-      coordinates: [xLine++, yLine],
-      isBomb: false,
-      isOpen: false,
-      showOffContent: null,
-    })
-  });
-
+  //logic for revealing fields
   useEffect(() => {
-    squareFragments.forEach((line) => addNewField(line.id, line));
-  }, [addNewField, squareFragments])
+    const surroundedFields: [number, number] [] = [];
+    const allFieldsCopy = getAllFields.slice();
 
-  const checkAroundField = (fieldId: string, coordinates: [number, number]) => {
-    let adjustField: [number, number][] = [];
+    if(activeFieldCoordinates.length) {
+      const hiddenContent = getHiddenValue(allFieldsCopy, activeFieldCoordinates);
+      const isElementNearBomb = Boolean(hiddenContent) || (hiddenContent && hiddenContent < 0);
 
-    for(let currentY = coordinates[1] - 1; currentY <= coordinates[1] + 1; currentY++) {
-      for(let currentX = coordinates[0] - 1; currentX <= coordinates[0] + 1; currentX++) {
-        if(currentX > 0 && currentX <= LINE_LENGTH && currentY > 0 && currentY <= LINE_LENGTH) {
-          adjustField.push([currentX, currentY]);
-        }
+      if(isElementNearBomb) {
+        return;
       }
+
+      revealEmptyFieldsInArea(surroundedFields, activeFieldCoordinates, allFieldsCopy);
+
+      for (const line of surroundedFields) {
+        const [xDot, yDot] = line;
+        const hiddenValue = getHiddenValue(allFieldsCopy, [xDot, yDot]);
+        const isOpen = allFieldsCopy[yDot * LINE_LENGTH + xDot].isOpen;
+
+        if(hiddenValue !== null && hiddenValue === BOMB && isOpen) {
+          continue;
+        }
+
+        const currentElement = allFieldsCopy.find((line) => line.id === `${xDot}@${yDot}`);
+        if(currentElement && !isOpen) {
+          (currentElement as ElementInfo).isOpen = true;
+        }
+
+        revealEmptyFieldsInArea(surroundedFields, line, allFieldsCopy);
+      }
+
+      updateFields(allFieldsCopy);
+      clearActiveElement();
+    }
+  },[activeFieldCoordinates, clearActiveElement, getAllFields, updateFields])
+
+  //logic for win condition
+  useEffect(() => {
+    const hiddenFieldsNumber = getAllFields.filter((fieldInfo) => fieldInfo.isOpen === false);
+    const isHiddenFieldsLimited = hiddenFieldsNumber.length === BOMBS_NUMBER;
+
+    const flagFields = hiddenFieldsNumber.filter((fieldInfo) => fieldInfo.hasFlag === true);
+    const isFlagsLimited = flagFields.length === BOMBS_NUMBER;
+
+    const isFlagsOnBombs = flagFields.filter((fieldInfo) => fieldInfo.hiddenContent === BOMB)
+      .length === BOMBS_NUMBER
+
+    if(isHiddenFieldsLimited && isFlagsLimited && isFlagsOnBombs) {
+      setStatus(GameStatus.Win);
     }
 
-    const bombsCount = adjustField.reduce((accumulate, matchedCoordinates) => {
-      let bombsNumber: number;
-
-      const findMatches = squareFragments.find((line) => {
-        if(line.coordinates[0] === matchedCoordinates[0] && line.coordinates[1] === matchedCoordinates[1]) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-
-      if(findMatches) {
-        bombsNumber = findMatches.isBomb ? 1 : 0;
-      } else {
-        bombsNumber = 0;
-      }
-      return accumulate += bombsNumber;
-    }, 0)
-
-    if(bombsCount > 0) {
-      updateShowOffField(fieldId, getKeyNameForFieldContent(bombsCount));
-    } else {
-      updateIsOpenField(fieldId, true);
-      updateShowOffField(fieldId, ZERO);
-
-      // for(const [coordinateX, coordinateY] of adjustField) {
-      //   if()
-      // }
-    }
-  }
+  }, [getAllFields, setStatus]);
 
   return(
     <S.PlaygroundWrapper>
       {
-        squareFragments.map((item, index) => <SingleBlock isBomb={item.isBomb} key={`uniq-key-${index}`}/>)
+        getAllFields.map((item, index) => (
+          <SingleBlock
+            blockInfo={item}
+            key={`uniq-key-${index}`}
+          />
+        ))
       }
     </S.PlaygroundWrapper>
   );

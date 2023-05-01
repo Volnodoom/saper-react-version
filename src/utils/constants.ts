@@ -7,7 +7,14 @@ export const MINUTE_DECADE_COUNTER = 2;
 export const SECOND_UNIT_COUNTER = 4;
 export const SECOND_DECADE_COUNTER = 5;
 export const SECOND_HUNDRED_COUNTER = 6;
-export const NUMBER_OF_ELEMENTS = 256;
+export const LINE_LENGTH = 16;
+export const BOMBS_NUMBER = 16;
+export const BOMB = -1;
+export const LEFT_CLICK_BUTTON = 0;
+export const RIGHT_CLICK_BUTTON = 2;
+export const FLAGS_DIGITS_NUMBER = 3;
+export const LOCALIZATION = 'ru-Ru';
+
 export const ZERO = 'Zero';
 
 export enum BasicNumbers {
@@ -28,16 +35,20 @@ export enum TimerKind {
   Seconds = 'Seconds',
 };
 
-export enum FieldContent {
-  Bomb = 'bomb',
-  Zero = 0,
-  One = 1,
-  Two = 2,
-  Three = 3,
-  Four = 4,
-  Five = 5,
-  Six = 6,
-  Seven = 7,
-  Eight = 8,
-  Nine = 9,
+export enum GameStatus {
+  Idle = 'idl',
+  Unsure = 'unsure',
+  Reset = 'reset',
+  Win = 'win',
+  Fail = 'fail',
 }
+
+export enum HiddenFieldInteraction {
+  Empty = 'empty',
+  Flag = 'flag',
+  Question = 'question',
+  QuestionEmpty = 'questionEmpty',
+  BombReveal = 'bombReveal',
+  BombDeactivation = 'bombDeactivation',
+}
+

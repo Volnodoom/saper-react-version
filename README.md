@@ -1,42 +1,45 @@
-# This project have been deployed on vercale and you could [follow the link](https://saper-react-version.vercel.app/) to check it
+## This project have been deployed on vercale and you could [follow the link](https://saper-react-version.vercel.app/) to check it
 
-# Getting Started with Create React App
+![Working App screenshot1](./src/assets/demo/first.png)
+![Working App screenshot2](./src/assets/demo/second.png)
+![Working App screenshot3](./src/assets/demo/third.png)
+
+Description:
+* Goal of Minesweeper game is to flag all bombs on the field without revealing them;
+* Project build with help of **React** + **Styled-components** + **TypesScript** and **Zustand**;
+* It have been used cycles and recursion to generate playground and logic for revealing empty fields;
+* Components, business and app logic are separated. 
+
+***
+
+## Проект задеплоен на vercale и вы можете посмотреть [следуя по ссылки](https://saper-react-version.vercel.app/)
+
+![Working App screenshot1](./src/assets/demo/first.png)
+![Working App screenshot2](./src/assets/demo/second.png)
+![Working App screenshot3](./src/assets/demo/third.png)
+
+Описание:
+* Цель игры сапер в пометке всех бомб на поле флажками при этом не открывая данные ячейки;
+* Проект написан на **React** + **Styled-components** + **TypesScript** и **Zustand**;
+* Используются циклы и рекурсия для генерации игрового поля и открытия пустых ячеек;
+* Компоненты, бизнес логика и логика приложений разделены между собой.
+
+***
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+### Available Scripts /Доступные скрипты
 
 In the project directory, you can run:
 
-### `npm start`
+#### `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
+#### `npm run build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
