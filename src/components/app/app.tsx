@@ -13,7 +13,7 @@ const App = () => {
   useEffect(() => {
     generateInitialField().forEach((line) => addNewField(line.id, line));
     return() => clearFields();
-  })
+  }, [addNewField, clearFields])
 
   useEffect(() => {
     const handleContextMenu = (evt: any) => {

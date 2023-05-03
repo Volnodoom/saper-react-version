@@ -64,9 +64,11 @@ const NumbersWrapper = styled.div`
 
 const NumbersSpan = styled.span`
   margin-right: 0.5em;
-  font-size: 0.6rem;
-  font-weight: 600;
 
+  font-size: 0.6rem;
+  font-weight: 900;
+  color: ${({theme}) => theme.color.numberRed};
+  text-shadow: 1px 1px 1px ${({theme}) => theme.color.blackText};
 `;
 
 export {

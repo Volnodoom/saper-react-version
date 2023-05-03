@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BasicNumbers, GENERAL_TIME_MS, GameStatus, MINUTE_DECADE_COUNTER, MINUTE_UNIT_COUNTER, ONE_MINUTE_MS, ONE_SEC_MS, SECOND_DECADE_COUNTER, SECOND_HUNDRED_COUNTER, SECOND_UNIT_COUNTER, SIXTY, TimerKind } from "utils/constants";
 import * as S from "../numbers.style";
-import NumberDigits from "../numbers";
+import NumberDigits from "../number-digits";
 import { useGameData } from "store";
 import { getGameStatus } from "store/selector";
 

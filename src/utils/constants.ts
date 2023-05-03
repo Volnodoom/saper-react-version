@@ -50,5 +50,15 @@ export enum HiddenFieldInteraction {
   QuestionEmpty = 'questionEmpty',
   BombReveal = 'bombReveal',
   BombDeactivation = 'bombDeactivation',
+  EmptyField = 'EmptyField',
+  BombExplosionField = 'BombExplosionField',
+  FieldOne = 'FieldOne',
+  FieldTwo = 'FieldTwo',
+  FieldThree = 'FieldThree',
+  FieldFour = 'FieldFour',
+  FieldFive = 'FieldFive',
+  FieldSix = 'FieldSix',
+  FieldSeven = 'FieldSeven',
+  FieldEight = 'FieldEight',
 }
 

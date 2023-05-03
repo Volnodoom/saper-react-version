@@ -33,6 +33,46 @@ const bombDeactivation = css`
   background-position: 97% 75%;
 `;
 
+const emptyField = css`
+  background-position: 14% 75%;
+`;
+
+const bombExplosionField = css`
+  background-position: 83.5% 75%;
+`;
+
+const fieldOne = css`
+  background-position: 0 100%;
+`;
+
+const fieldTwo = css`
+  background-position: 13.9% 100%;
+`;
+
+const fieldThree = css`
+  background-position: 27.7% 100%;
+`;
+
+const fieldFour = css`
+  background-position: 41.6% 100%;
+`;
+
+const fieldFive = css`
+  background-position: 55.4% 100%;
+`;
+
+const fieldSix = css`
+  background-position: 69.2% 100%;
+`;
+
+const fieldSeven = css`
+  background-position: 83% 100%;
+`;
+
+const fieldEight = css`
+  background-position: 96.8% 100%;
+`;
+
 const InactiveField = styled(Button)<InactiveFieldType>`
   ${buttonBase};
   background-position: 0 75%;
@@ -42,69 +82,18 @@ const InactiveField = styled(Button)<InactiveFieldType>`
   ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.QuestionEmpty && questionEmpty}
   ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.BombReveal && bombReveal}
   ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.BombDeactivation && bombDeactivation}
-
-`;
-
-const EmptyField = styled(Button)`
-  ${buttonBase};
-  background-position: 14% 75%;
-`;
-
-const BombExplosionField = styled(Button)`
-  ${buttonBase};
-  background-position: 83.5% 75%;
-`;
-
-const FieldOne = styled(Button)`
-  ${buttonBase};
-  background-position: 0 100%;
-`;
-
-const FieldTwo = styled(Button)`
-  ${buttonBase};
-  background-position: 13.9% 100%;
-`;
-
-const FieldThree = styled(Button)`
-  ${buttonBase};
-  background-position: 27.7% 100%;
-`;
-
-const FieldFour = styled(Button)`
-  ${buttonBase};
-  background-position: 41.6% 100%;
-`;
-
-const FieldFive = styled(Button)`
-  ${buttonBase};
-  background-position: 55.4% 100%;
-`;
-
-const FieldSix = styled(Button)`
-  ${buttonBase};
-  background-position: 69.2% 100%;
-`;
-
-const FieldSeven = styled(Button)`
-  ${buttonBase};
-  background-position: 83% 100%;
-`;
-
-const FieldEight = styled(Button)`
-  ${buttonBase};
-  background-position: 96.8% 100%;
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.EmptyField && emptyField}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.BombExplosionField && bombExplosionField}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.FieldOne && fieldOne}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.FieldTwo && fieldTwo}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.FieldThree && fieldThree}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.FieldFour && fieldFour}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.FieldFive && fieldFive}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.FieldSix && fieldSix}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.FieldSeven && fieldSeven}
+  ${({hiddenInteraction}) => hiddenInteraction === HiddenFieldInteraction.FieldEight && fieldEight}
 `;
 
 export {
   InactiveField,
-  EmptyField,
-  BombExplosionField,
-  FieldOne,
-  FieldTwo,
-  FieldThree,
-  FieldFour,
-  FieldFive,
-  FieldSix,
-  FieldSeven,
-  FieldEight,
 }

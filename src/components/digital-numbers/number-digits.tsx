@@ -1,5 +1,6 @@
 import { BasicNumbers } from "utils/constants";
 import * as S from "./numbers.style";
+import { memo } from "react";
 
 const NumberDigits = (props: {value: number}) => {
   const value = props.value;
@@ -30,4 +31,4 @@ const NumberDigits = (props: {value: number}) => {
   }
 };
 
-export default NumberDigits;
+export default memo(NumberDigits);

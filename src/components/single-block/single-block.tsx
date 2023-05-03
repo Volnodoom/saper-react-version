@@ -3,7 +3,7 @@ import { ElementInfo } from "store/single-field-data";
 import { useGameData, usePlaygroundStore } from "store";
 import { BasicNumbers, BOMB, GameStatus, HiddenFieldInteraction, RIGHT_CLICK_BUTTON } from "utils/constants";
 import * as S from "./single-block.style";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, memo, useEffect, useState } from "react";
 
 type SingleBlockType = {
   blockInfo: ElementInfo,
@@ -30,27 +30,6 @@ const SingleBlock = ({blockInfo}: SingleBlockType) => {
   const [counterClick, setCounterClick] = useState(0);
   const [hiddenInteractionValue, setHiddenInteractionValue] = useState(HiddenFieldInteraction.Empty)
 
-  // right click logic
-  useEffect(() => {
-    if(counterClick === BasicNumbers.One) {
-      addFieldFlag(id);
-      removeGlobalFlag();
-      setHiddenInteractionValue(HiddenFieldInteraction.Flag);
-    }
-    if(counterClick === BasicNumbers.Two) {
-      removeFieldFlag(id);
-      addGlobalFlag();
-      setHiddenInteractionValue(HiddenFieldInteraction.Question);
-    }
-    if(counterClick === BasicNumbers.Zero) {
-      setHiddenInteractionValue(HiddenFieldInteraction.Empty);
-    }
-    if(counterClick > BasicNumbers.Two) {
-      setHiddenInteractionValue(HiddenFieldInteraction.Empty);
-      setCounterClick(0);
-    }
-  }, [addFieldFlag, addGlobalFlag, counterClick, id, removeFieldFlag, removeGlobalFlag])
-
   useEffect(() => {
     if(currentStatus === GameStatus.Reset) {
       setCounterClick(0);
@@ -58,12 +37,15 @@ const SingleBlock = ({blockInfo}: SingleBlockType) => {
     }
   }, [currentStatus])
 
-
   const calculateHiddenInteraction = () => {
     if(currentStatus === GameStatus.Fail && hiddenContent === BOMB) {
       if(hasFlag) {
         return HiddenFieldInteraction.BombDeactivation;
       }
+      if(isOpen) {
+        return HiddenFieldInteraction.BombExplosionField;
+      }
+
       return HiddenFieldInteraction.BombReveal;
     }
 
@@ -71,14 +53,55 @@ const SingleBlock = ({blockInfo}: SingleBlockType) => {
       return HiddenFieldInteraction.BombDeactivation;
     }
 
+    if(isOpen) {
+      if(hiddenContent === BasicNumbers.Zero) {
+        return HiddenFieldInteraction.EmptyField;
+      } else if(hiddenContent === BasicNumbers.One) {
+        return HiddenFieldInteraction.FieldOne;
+      } else if(hiddenContent === BasicNumbers.Two) {
+        return HiddenFieldInteraction.FieldTwo;
+      } else if(hiddenContent === BasicNumbers.Three) {
+        return HiddenFieldInteraction.FieldThree;
+      } else if(hiddenContent === BasicNumbers.Four) {
+        return HiddenFieldInteraction.FieldFour;
+      } else if(hiddenContent === BasicNumbers.Five) {
+        return HiddenFieldInteraction.FieldFive;
+      } else if(hiddenContent === BasicNumbers.Six) {
+        return HiddenFieldInteraction.FieldSix;
+      } else if(hiddenContent === BasicNumbers.Seven) {
+        return HiddenFieldInteraction.FieldSeven;
+      } else if(hiddenContent === BasicNumbers.Eight) {
+        return HiddenFieldInteraction.FieldEight;
+      }
+    }
 
-    return hiddenInteractionValue
+    return hiddenInteractionValue;
   }
 
   const handleRightClick = () => {
+    let updatedClick = counterClick + 1;
     if(currentStatus === GameStatus.Fail || currentStatus === GameStatus.Win) {
-      return
+      return;
     }
+
+    if(updatedClick === BasicNumbers.One) {
+      addFieldFlag(id);
+      removeGlobalFlag();
+      setHiddenInteractionValue(HiddenFieldInteraction.Flag);
+    }
+
+    if(updatedClick === BasicNumbers.Two) {
+      removeFieldFlag(id);
+      addGlobalFlag();
+      setHiddenInteractionValue(HiddenFieldInteraction.Question);
+    }
+
+    if(updatedClick > BasicNumbers.Two) {
+      setHiddenInteractionValue(HiddenFieldInteraction.Empty);
+      setCounterClick(0);
+      return;
+    }
+
     setCounterClick(prev => prev + 1);
   }
 
@@ -89,11 +112,11 @@ const SingleBlock = ({blockInfo}: SingleBlockType) => {
     }
 
     if(currentStatus === GameStatus.Fail || currentStatus === GameStatus.Win) {
-      return
+      return;
     }
 
-    if(hasFlag) {
-      return
+    if(hasFlag || isOpen) {
+      return;
     }
 
     if(hiddenContent === BOMB) {
@@ -112,34 +135,10 @@ const SingleBlock = ({blockInfo}: SingleBlockType) => {
     }
 
     if(currentStatus === GameStatus.Fail || currentStatus === GameStatus.Win) {
-      return
+      return;
     }
 
     setStatus(GameStatus.Unsure)
-  }
-
-  if(isOpen) {
-    if(hiddenContent === BOMB) {
-      return <S.BombExplosionField />
-    } else if(hiddenContent === null || hiddenContent === BasicNumbers.Zero) {
-      return <S.EmptyField />;
-    } else if(hiddenContent === BasicNumbers.One) {
-      return <S.FieldOne />;
-    } else if(hiddenContent === BasicNumbers.Two) {
-      return <S.FieldTwo />;
-    } else if(hiddenContent === BasicNumbers.Three) {
-      return <S.FieldThree />;
-    } else if(hiddenContent === BasicNumbers.Four) {
-      return <S.FieldFour />;
-    } else if(hiddenContent === BasicNumbers.Five) {
-      return <S.FieldFive />;
-    } else if(hiddenContent === BasicNumbers.Six) {
-      return <S.FieldSix />;
-    } else if(hiddenContent === BasicNumbers.Seven) {
-      return <S.FieldSeven />;
-    } else if(hiddenContent === BasicNumbers.Eight) {
-      return <S.FieldEight />;
-    }
   }
 
   return(
@@ -150,4 +149,4 @@ const SingleBlock = ({blockInfo}: SingleBlockType) => {
     />);
 };
 
-export default SingleBlock;
+export default memo(SingleBlock);
