@@ -10,6 +10,7 @@ export const BOMB = -1;
 export const LEFT_CLICK_BUTTON = 0;
 export const RIGHT_CLICK_BUTTON = 2;
 export const FLAGS_DIGITS_NUMBER = 3;
+export const TIME_FAIL_CONDITION = 999;
 export const LOCALIZATION = 'ru-Ru';
 
 export const ZERO = 'Zero';
