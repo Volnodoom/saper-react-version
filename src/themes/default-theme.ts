@@ -15,5 +15,6 @@ export const defaultTheme = {
     greyCover: '#bdbdbd',
     white: '#ffffff',
     whiteImpure: '#f8f9f9',
+    numberRed: '#ff0000',
   }
 } as const;

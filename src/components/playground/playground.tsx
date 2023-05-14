@@ -17,11 +17,11 @@ const Playground = () => {
   //logic for revealing fields
   useEffect(() => {
     const surroundedFields: [number, number] [] = [];
-    const allFieldsCopy = getAllFields.slice();
+    const allFieldsCopy = getAllFields.map((value) => Object.assign({}, value));
 
     if(activeFieldCoordinates.length) {
       const hiddenContent = getHiddenValue(allFieldsCopy, activeFieldCoordinates);
-      const isElementNearBomb = Boolean(hiddenContent) || (hiddenContent && hiddenContent < 0);
+      const isElementNearBomb = Boolean(hiddenContent);
 
       if(isElementNearBomb) {
         return;

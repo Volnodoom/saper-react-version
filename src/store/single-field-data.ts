@@ -5,7 +5,7 @@ export type ElementInfo = {
   coordinates: number[],
   hasFlag: boolean,
   isOpen: boolean,
-  hiddenContent: null | number,
+  hiddenContent: number,
 }
 
 export type CurrentElementType = {

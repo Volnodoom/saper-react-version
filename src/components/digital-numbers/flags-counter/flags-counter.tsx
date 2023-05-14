@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BOMBS_NUMBER, BasicNumbers, FLAGS_DIGITS_NUMBER, GameStatus, LOCALIZATION } from "utils/constants";
-import NumberDigits from "../numbers";
+import NumberDigits from "../number-digits";
 import * as S from "../numbers.style";
 import { useGameData } from "store";
 import { getFlagGlobal, getGameStatus, setFlagGlobalNumber } from "store/selector";
@@ -8,14 +8,12 @@ import { getFlagGlobal, getGameStatus, setFlagGlobalNumber } from "store/selecto
 const FlagsCounter = () => {
   const globalFlagsNumber = useGameData(getFlagGlobal);
   const setGlobalFlagsNumber = useGameData(setFlagGlobalNumber);
-  const currentStatus = useGameData(getGameStatus);
+  const isReset = useGameData(getGameStatus) === GameStatus.Reset;
 
   const [unit, setUnit] = useState<number>(BasicNumbers.Zero);
   const [decade, setDecade] = useState<number>(BasicNumbers.Zero);
   const [hundred, setHundred] = useState<number>(BasicNumbers.Zero);
   const [isNegative, setIsNegative] = useState(false);
-
-  const isReset = currentStatus === GameStatus.Reset;
 
   useEffect(() => {
     let flagsNumber = globalFlagsNumber;
@@ -25,22 +23,32 @@ const FlagsCounter = () => {
       flagsNumber = Math.abs(flagsNumber);
     }
 
-    if(globalFlagsNumber >= 0) {
+    if(globalFlagsNumber >= 0 && isNegative) {
       setIsNegative(false);
     }
 
     const formatter = new Intl.NumberFormat(LOCALIZATION, {minimumIntegerDigits: FLAGS_DIGITS_NUMBER});
     const [firstDigit, secondDigit, thirdDigit] = formatter
-    .format(flagsNumber)
-    .replace(/(\d{1})?(\d{1})?(\d{1})?(\d{1,})?/, '$1 $2 $3')
-    .split(' ')
-    .reverse();
+      .format(flagsNumber)
+      .replace(/(\d{1})?(\d{1})?(\d{1})?(\d{1,})?/, '$1 $2 $3')
+      .split(' ')
+      .reverse();
 
-    setUnit(+firstDigit);
-    setDecade(+secondDigit);
-    setHundred(+thirdDigit);
-  }, [globalFlagsNumber])
+    if(unit !== +firstDigit) {
+      setUnit(+firstDigit);
+    }
 
+    if(decade !== +secondDigit) {
+      setDecade(+secondDigit);
+    }
+
+    if(hundred !== +thirdDigit) {
+      setHundred(+thirdDigit);
+    }
+
+  }, [decade, globalFlagsNumber, hundred, isNegative, unit])
+
+  //place logic to reset button
   useEffect(() => {
     if(isReset) {
       setGlobalFlagsNumber(BOMBS_NUMBER);
@@ -52,14 +60,14 @@ const FlagsCounter = () => {
   return(
     <S.NumbersWrapper>
       <>
-      {
-        isNegative ? <S.NumbersSpan> — </S.NumbersSpan> : <></>
-      }
-      <NumberDigits value={hundred}/>
-
+        {
+          isNegative ? <S.NumbersSpan> — </S.NumbersSpan> : <></>
+        }
+        <NumberDigits key={`${hundred}-hundred`} value={hundred}/>
       </>
-      <NumberDigits value={decade}/>
-      <NumberDigits value={unit}/>
+
+      <NumberDigits key={`${decade}-decade`} value={decade}/>
+      <NumberDigits key={`${unit}-unit`} value={unit}/>
     </S.NumbersWrapper>
   );
 };
